@@ -1,0 +1,14 @@
+{
+  "name": "easymeet",
+  "version": "1.0.0",
+  "description": "ALX portfolio project",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server.js"
+  },
+  "author": "Yasser Rahmouni",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
