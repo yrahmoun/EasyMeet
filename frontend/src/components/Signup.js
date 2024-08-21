@@ -1,23 +1,25 @@
-import React from 'react'
-import { VStack } from "@chakra-ui/layout";
+import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
-import { Button } from "@chakra-ui/button";
-import { useState } from "react";
+import { VStack } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
-import { useHistory } from "react-router";
 import axios from "axios";
+import { useState } from "react";
+import { useHistory } from "react-router";
+import { ChatState } from "../Context/ChatProvider";
 
 const Signup = () => {
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [confirmpassword, setConfirmpassword] = useState();
   const [show, setShow] = useState(false);
-  const [pic, setPic] = useState();
+  const handleClick = () => setShow(!show);
   const toast = useToast();
   const history = useHistory();
-  const handleClick = () => setShow(!show);
+  const { setUser } = ChatState();
+
+  const [name, setName] = useState();
+  const [email, setEmail] = useState();
+  const [confirmpassword, setConfirmpassword] = useState();
+  const [password, setPassword] = useState();
+  const [pic, setPic] = useState();
 
   const submitHandler = async () => {
     if (!name || !email || !password || !confirmpassword) {
@@ -57,7 +59,6 @@ const Signup = () => {
         },
         config
       );
-      console.log(data);
       toast({
         title: "Registration Successful",
         status: "success",
@@ -65,6 +66,7 @@ const Signup = () => {
         isClosable: true,
         position: "bottom",
       });
+      setUser(data);
       localStorage.setItem("userInfo", JSON.stringify(data));
       history.push("/chats");
     } catch (error) {
@@ -148,4 +150,4 @@ const Signup = () => {
   )
 }
 
-export default Signup
+export default Signup;

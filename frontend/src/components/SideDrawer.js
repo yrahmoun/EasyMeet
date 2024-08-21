@@ -1,8 +1,7 @@
-import React from 'react';
-import { useState } from "react";
-import { Box, Text } from "@chakra-ui/layout";
-import { Tooltip } from "@chakra-ui/tooltip";
 import { Button } from "@chakra-ui/button";
+import { useDisclosure } from "@chakra-ui/hooks";
+import { Input } from "@chakra-ui/input";
+import { Box, Text } from "@chakra-ui/layout";
 import {
   Menu,
   MenuButton,
@@ -10,11 +9,6 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/menu";
-import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { Avatar } from "@chakra-ui/avatar";
-import { ChatState } from "../Context/ChatProvider";
-import ProfileModal from "./ProfileModal";
-import { useHistory } from "react-router-dom";
 import {
   Drawer,
   DrawerBody,
@@ -22,34 +16,40 @@ import {
   DrawerHeader,
   DrawerOverlay,
 } from "@chakra-ui/modal";
-import { useDisclosure } from "@chakra-ui/hooks";
-import { Input } from "@chakra-ui/input";
+import { Tooltip } from "@chakra-ui/tooltip";
+import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { Avatar } from "@chakra-ui/avatar";
+import { useHistory } from "react-router-dom";
+import { useState } from "react";
 import axios from "axios";
 import { useToast } from "@chakra-ui/toast";
 import ChatLoading from "./ChatLoading";
-import UserListItem from "./UserListItem";
 import { Spinner } from "@chakra-ui/spinner";
+import ProfileModal from "./ProfileModal";
+import UserListItem from "./UserListItem";
+import { ChatState } from "../Context/ChatProvider";
 
-const SideDrawer = () => {
+function SideDrawer() {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
 
-   const {
+  const {
     setSelectedChat,
     user,
-    notification,
-    setNotification,
     chats,
     setChats,
   } = ChatState();
-  const history = useHistory();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const history = useHistory();
 
   const logoutHandler = () => {
     localStorage.removeItem("userInfo");
+    setSelectedChat(null);
+    setChats([]);
     history.push("/");
   };
 
@@ -120,7 +120,7 @@ const SideDrawer = () => {
   };
 
   return (
-    <div>
+    <>
       <Box
         display="flex"
         justifyContent="space-between"
@@ -133,7 +133,7 @@ const SideDrawer = () => {
         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
           <Button variant="ghost" onClick={onOpen}>
             <i className="fas fa-search"></i>
-            <Text d={{ base: "none", md: "flex" }} px={4}>
+            <Text display={{ base: "none", md: "flex" }} px={4}>
               Search User
             </Text>
           </Button>
@@ -166,6 +166,7 @@ const SideDrawer = () => {
           </Menu>
         </div>
       </Box>
+
       <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent>
@@ -195,8 +196,8 @@ const SideDrawer = () => {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-    </div>
-  )
+    </>
+  );
 }
 
 export default SideDrawer;

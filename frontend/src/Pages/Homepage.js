@@ -14,7 +14,7 @@ import Login from "../components/Login";
 import { useEffect } from "react";
 import { useHistory } from "react-router";
 
-const Homepage = () => {
+function Homepage() {
   const history = useHistory();
 
   useEffect(() => {
@@ -60,4 +60,4 @@ const Homepage = () => {
   )
 }
 
-export default Homepage
+export default Homepage;
