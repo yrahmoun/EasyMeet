@@ -28,6 +28,9 @@ import { Spinner } from "@chakra-ui/spinner";
 import ProfileModal from "./ProfileModal";
 import UserListItem from "./UserListItem";
 import { ChatState } from "../Context/ChatProvider";
+import { getSender } from "../config/ChatLogics";
+import NotificationBadge from "react-notification-badge";
+import { Effect } from "react-notification-badge";
 
 function SideDrawer() {
   const [search, setSearch] = useState("");
@@ -40,6 +43,8 @@ function SideDrawer() {
     user,
     chats,
     setChats,
+    notification,
+    setNotification,
   } = ChatState();
 
   const toast = useToast();
@@ -130,10 +135,10 @@ function SideDrawer() {
         p="5px 10px 5px 10px"
         borderWidth="5px"
       >
-        <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
+         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
           <Button variant="ghost" onClick={onOpen}>
             <i className="fas fa-search"></i>
-            <Text display={{ base: "none", md: "flex" }} px={4}>
+            <Text d={{ base: "none", md: "flex" }} px={4}>
               Search User
             </Text>
           </Button>
@@ -144,8 +149,28 @@ function SideDrawer() {
         <div>
           <Menu>
             <MenuButton p={1}>
+              <NotificationBadge
+                count={notification.length}
+                effect={Effect.SCALE}
+              />
               <BellIcon fontSize="2xl" m={1} />
             </MenuButton>
+            <MenuList pl={2}>
+              {!notification.length && "No New Messages"}
+              {notification.map((notif) => (
+                <MenuItem
+                  key={notif._id}
+                  onClick={() => {
+                    setSelectedChat(notif.chat);
+                    setNotification(notification.filter((n) => n !== notif));
+                  }}
+                >
+                  {notif.chat.isGroupChat
+                    ? `New Message in ${notif.chat.chatName}`
+                    : `New Message from ${getSender(user, notif.chat.users)}`}
+                </MenuItem>
+              ))}
+            </MenuList>
           </Menu>
           <Menu>
             <MenuButton as={Button} bg="white" rightIcon={<ChevronDownIcon />}>

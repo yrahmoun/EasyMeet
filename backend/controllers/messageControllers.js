@@ -31,6 +31,7 @@ const sendMessage = asyncHandler(async (req, res) => {
 
   try {
     let message = await Message.create(newMessage);
+
     message = await Message.findById(message._id)
       .populate("sender", "name pic")
       .populate({
